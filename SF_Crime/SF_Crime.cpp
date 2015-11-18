@@ -9,6 +9,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "CSV_reader.h"
+#include <shark/Data/Csv.h> 
+#include <shark/Algorithms/Trainers/RFTrainer.h>
+#include <shark/ObjectiveFunctions/Loss/ZeroOneLoss.h> 
 
 int main(void) {
 	puts("!!!Hello World!!!");

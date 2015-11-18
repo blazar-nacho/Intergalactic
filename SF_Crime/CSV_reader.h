@@ -1,3 +1,11 @@
+/*
+ * CSV_reader.h
+ *
+ *  Created on: 8 de nov. de 2015
+ *      Author: Intergalactic
+ */
+#pragma once
+
 #ifndef CSV_READER_H_
 #define CSV_READER_H_
 
@@ -25,7 +33,8 @@ CSV_reader();
 
 // test true si es test set, false si no, sería train. originalSet true si son los set originales,
 // false si son los modificados para agregar temperatura, lluvias, etc
-static vector <CSV_row*> parse(string file_path, bool test=false, bool originalSet=true);
+vector <CSV_row*> parse(string file_path, bool test=false, bool originalSet=true);
+
 
 
 };
