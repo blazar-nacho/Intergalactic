@@ -70,7 +70,7 @@ CC =  @echo "  CC  $@"; $(occ)
 CXX = @echo "  CXX $@"; $(ocxx)
 RM =  @echo "  CLEAN"; $(orm)
 LD =  @echo "  LD  $@"; $(old)
-LDLIBS = -lshark -Llib
+LDLIBS = -fopenmp -lshark -Llib -lboost_serialization -lblas -llapack
 endif
 
 
