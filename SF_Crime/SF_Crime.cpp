@@ -29,9 +29,11 @@ int main(void) {
 	delete reader;
 
 
-	for (int i = 0; i < 9; i++) 
-		cout << data[15]->getFieldsNum().at(i) << " + ";
-	cout << endl;
+	for (size_t i = 0; i < data[15]->getFieldsNum().size(); i++) 
+		printf("%f + ", data[15]->getFieldsNum().at(i));
+		//cout << data[15]->getFieldsNum().at(i) << " + ";
+	printf("\n");
+	
 
 	for (size_t i = 0; i < data.size(); i++) 
 		delete data[i];

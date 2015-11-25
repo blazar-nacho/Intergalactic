@@ -24,6 +24,8 @@
 
 #define DAY_VEC {{"Monday",1},{"Tuesday",2},{"Wednesday",3},{"Thursday",4},{"Friday",5},{"Saturday",6},{"Sunday",7}}
 
+#define PD_VEC {{"BAYVIEW",1},{"CENTRAL",2},{"INGLESIDE",3},{"MISSION",4},{"NORTHERN",5},{"PARK",6},{"RICHMOND",7},{"SOUTHERN",8},{"TARAVAL",9},{"TENDERLOIN",10}}
+
 using namespace std;
 
 typedef map<string, float>  lbl_num;
@@ -31,6 +33,7 @@ typedef map<string, float>  lbl_num;
 const vector<string> train_labels = TRAIN_VEC;
 const lbl_num categories = CAT_VEC;
 const lbl_num days = DAY_VEC;
+const lbl_num pd_district = PD_VEC;
 
 class Row{
 

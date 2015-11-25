@@ -38,7 +38,7 @@ Row::Row(string line, bool test, bool originalSet){
 				//cout << fieldNum << endl;
 
 				if ((fieldNum != DROP) && (i > 0)) {
-					//cout << "ok" << endl;
+					//cout << fieldsNum.size() << endl;
 					fieldsNum.push_back(fieldNum);
 				}
 
@@ -94,28 +94,30 @@ timedates_t Row::getDates(){
 
 float Row::operateField(string field, size_t fieldId)
 {
-	if ((train_labels.at(fieldId).compare("Descript") == 0) 
-	|| (train_labels.at(fieldId).compare("Resolution") == 0))
-		return DROP;
-
 	if (train_labels.at(fieldId).compare("Dates") == 0) {
 		parseDates(field);
 		return 0.0f;
 	}
 
 	if ((train_labels.at(fieldId).compare("X") == 0)
-	|| (train_labels.at(fieldId).compare("Y") == 0)){
-		//cout << stof(field) << endl;
+	|| (train_labels.at(fieldId).compare("Y") == 0)){		
 		return stof(field);
 	}
 
 	if (train_labels.at(fieldId).compare("Category") == 0)
 		return categories.at(field);
 
+	if (train_labels.at(fieldId).compare("PdDistrict") == 0)
+		return pd_district.at(field);
+
 	if (train_labels.at(fieldId).compare("DayOfWeek") == 0)
 		return days.at(field);
 
-	return 0.0f;
+	/*if ((train_labels.at(fieldId).compare("Descript") == 0) 
+	|| (train_labels.at(fieldId).compare("Resolution") == 0))
+		return DROP;*/
+
+	return DROP;
 
 
 }
