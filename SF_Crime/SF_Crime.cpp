@@ -19,6 +19,26 @@ using namespace shark;
 
 int main(void) {
 
+	CSV_reader *reader = new CSV_reader();
+	
+	vector<Row*> data = reader->parse("train.csv");
+
+	cout << data.size() << endl;
+
+
+	delete reader;
+
+
+	for (int i = 0; i < 9; i++) 
+		cout << data[15]->getFieldsNum().at(i) << " + ";
+	cout << endl;
+
+	for (size_t i = 0; i < data.size(); i++) 
+		delete data[i];
+	
+	data.clear();
+
+/*
 	ClassificationDataset data;
 	importCSV(data, "data/C.csv", LAST_COLUMN, ' ');
 	   
@@ -45,7 +65,7 @@ int main(void) {
 	
 	prediction = model(dataTest.inputs());
 	cout << "Random Forest on test set accuracy:     " << 1. - loss.eval(dataTest.labels(), prediction) << endl;
-
+*/
 
 	return EXIT_SUCCESS;
 }
