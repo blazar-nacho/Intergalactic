@@ -36,7 +36,8 @@ CXXSTD = c++11
 VGLOGFILE = valgrind.out
 
 # Flags para el Valgrind
-VGFLAGS = --tool=memcheck --trace-children=yes --track-fds=yes --time-stamp=yes --num-callers=20 --error-exitcode=42 --db-attach=no --leak-check=full --leak-resolution=med --track-origins=yes --log-file=$(VGLOGFILE) 
+VGFLAGS = --tool=memcheck --time-stamp=yes --leak-check=full --log-file=$(VGLOGFILE) 
+#VGFLAGS = --tool=memcheck --trace-children=yes --track-fds=yes --time-stamp=yes --num-callers=20 --error-#exitcode=42 --db-attach=no --leak-check=full --leak-resolution=med --track-origins=yes --log-file=$(VGLOGFILE) 
 
 
 
