@@ -11,6 +11,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <iomanip>
 #include <vector>
 #include <string>
 #include <map>
@@ -28,7 +29,7 @@
 
 using namespace std;
 
-typedef map<string, float>  lbl_num;
+typedef map<string, double>  lbl_num;
 
 const vector<string> train_labels = TRAIN_VEC;
 const lbl_num categories = CAT_VEC;
@@ -41,23 +42,24 @@ public:
 
 Row(string line, bool test, bool originalSet);
 string extractField(string line, size_t* pos);
-vector<float> getFieldsNum();
-float get(size_t pos);
-void set(size_t pos, float newval);
+vector<double> getFieldsNum();
+double get(size_t pos);
+void set(size_t pos, double newval);
 size_t get_size();
 
 timedates_t getDates();
-float operateField(string field, size_t fieldId);
+double operateField(string field, size_t fieldId);
 void parseDates(string field);
 
 
 ~Row();
 
 private:
-vector<float> fieldsNum;
+vector<double> fieldsNum;
 timedates_t dates;
 
 };
+
 
 class CSV_reader {
 
@@ -69,7 +71,7 @@ CSV_reader();
 // false si son los modificados para agregar temperatura, lluvias, etc
 vector<Row*> parse(string file_path, bool test=false, bool originalSet=true);
 
-
+void write(vector<Row*> input, string out);
 
 };
 

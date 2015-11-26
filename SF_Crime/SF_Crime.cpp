@@ -12,10 +12,13 @@
 #include <shark/Data/Csv.h> 
 #include <shark/Algorithms/Trainers/RFTrainer.h>
 #include <shark/ObjectiveFunctions/Loss/ZeroOneLoss.h>
-#include <iostream>  
+#include <iostream>
+
 
 using namespace std; 
 using namespace shark;
+
+typedef UnlabeledData<RealVector> data_shark;
 
 int main(void) {
 
@@ -25,14 +28,17 @@ int main(void) {
 
 	cout << data.size() << endl;
 
+	reader->write(data, "salida.csv");
 
 	delete reader;
 
 
-	for (size_t i = 0; i < data[15]->getFieldsNum().size(); i++) 
+	/*for (size_t i = 0; i < data[15]->getFieldsNum().size(); i++) 
 		printf("%f + ", data[15]->getFieldsNum().at(i));
 		//cout << data[15]->getFieldsNum().at(i) << " + ";
-	printf("\n");
+	printf("\n");*/
+
+	//data_shark* train = new data_shark(data[15]->getFieldsNum());
 	
 
 	for (size_t i = 0; i < data.size(); i++) 

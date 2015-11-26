@@ -9,8 +9,6 @@
 #include "Standard_Scaler.h"
 
 
-
-
 using namespace std;
 
 
@@ -33,20 +31,20 @@ Row::Row(string line, bool test, bool originalSet){
 				}
 
 				// opera el campo dependiendo del tipo		
-				float fieldNum = operateField(field, i);				
+				double fieldNum = operateField(field, i);				
 
 				if ((fieldNum != DROP) && (i > 0)) {					
 					fieldsNum.push_back(fieldNum);
 				}
 
 				// si i=0 es Dates, corregir
-				// float para std scaling
+				// double para std scaling
 				if (i==0) {
-					fieldsNum.push_back((float)dates.t_year);
-					fieldsNum.push_back((float)dates.t_month);
-					fieldsNum.push_back((float)dates.t_day);
-					fieldsNum.push_back((float)dates.t_hour);
-					fieldsNum.push_back((float)dates.t_min);
+					fieldsNum.push_back((double)dates.t_year);
+					fieldsNum.push_back((double)dates.t_month);
+					fieldsNum.push_back((double)dates.t_day);
+					fieldsNum.push_back((double)dates.t_hour);
+					fieldsNum.push_back((double)dates.t_min);
 				}
 					
 
@@ -78,14 +76,14 @@ string Row::extractField(string line, size_t* pos)
 }
 
 
-vector<float> Row::getFieldsNum(){
+vector<double> Row::getFieldsNum(){
 	return fieldsNum;
 }
 timedates_t Row::getDates(){
 	return dates;
 }
 
-float Row::operateField(string field, size_t fieldId)
+double Row::operateField(string field, size_t fieldId)
 {
 	if (train_labels.at(fieldId).compare("Dates") == 0) {
 		parseDates(field);
@@ -132,7 +130,7 @@ void Row::parseDates(string field){
 
 }
 
-float Row::get(size_t pos) {
+double Row::get(size_t pos) {
 	return fieldsNum.at(pos);
 }
 
@@ -140,7 +138,7 @@ size_t Row::get_size() {
 	return fieldsNum.size();
 }
 
-void Row::set(size_t pos, float newval){
+void Row::set(size_t pos, double newval){
 	fieldsNum[pos] = newval;
 }
 
@@ -194,6 +192,20 @@ vector<Row*> CSV_reader::parse(string file_path, bool test, bool originalSet){
 }
 
 
+void CSV_reader::write(vector<Row*> input, string out){
+
+	remove(out.c_str());
+	ofstream output(out.c_str(), ios::app);
+
+	output<< fixed << setprecision(8) ;
+	for (size_t i=0; i<input.size(); i++) {
+		for (size_t j = 0; j<input[i]->get_size()-1; j++)
+			output << input[i]->get(j) << "," ;
+		output << input[i]->get(input[i]->get_size()-1) << endl;
+	}
+
+
+}
 
 
 
