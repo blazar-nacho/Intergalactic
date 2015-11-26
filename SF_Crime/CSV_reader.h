@@ -41,16 +41,19 @@ public:
 
 Row(string line, bool test, bool originalSet);
 string extractField(string line, size_t* pos);
-vector<string> getFields();
 vector<float> getFieldsNum();
+float get(size_t pos);
+void set(size_t pos, float newval);
+size_t get_size();
+
 timedates_t getDates();
 float operateField(string field, size_t fieldId);
 void parseDates(string field);
 
+
 ~Row();
 
-private: 
-vector<string> fields;
+private:
 vector<float> fieldsNum;
 timedates_t dates;
 

@@ -6,7 +6,7 @@
  */
 
 #include "CSV_reader.h"
-
+#include "Standard_Scaler.h"
 
 
 
@@ -18,8 +18,7 @@ Row::Row(string line, bool test, bool originalSet){
 
 		if (originalSet && !test){
 			// donde empieza el campo
-			size_t found = 0;
-			//cout << line << endl;
+			size_t found = 0;			
 
 			// for en vez de while porque necesito todas las columnas
 			// sino devolver vacio
@@ -29,16 +28,14 @@ Row::Row(string line, bool test, bool originalSet){
 				
 				// si no se parsea bien un campo, marco para quitar				
 				if (field.compare("") == 0) {
-					fields.clear();
+					fieldsNum.clear();
 					break;
 				}
 
 				// opera el campo dependiendo del tipo		
-				float fieldNum = operateField(field, i);
-				//cout << fieldNum << endl;
+				float fieldNum = operateField(field, i);				
 
-				if ((fieldNum != DROP) && (i > 0)) {
-					//cout << fieldsNum.size() << endl;
+				if ((fieldNum != DROP) && (i > 0)) {					
 					fieldsNum.push_back(fieldNum);
 				}
 
@@ -80,10 +77,6 @@ string Row::extractField(string line, size_t* pos)
 
 }
 
-vector<string> Row::getFields()
-{
-	return fields;
-}
 
 vector<float> Row::getFieldsNum(){
 	return fieldsNum;
@@ -139,9 +132,23 @@ void Row::parseDates(string field){
 
 }
 
+float Row::get(size_t pos) {
+	return fieldsNum.at(pos);
+}
+
+size_t Row::get_size() {
+	return fieldsNum.size();
+}
+
+void Row::set(size_t pos, float newval){
+	fieldsNum[pos] = newval;
+}
+
+
+
 Row::~Row(){
 
-	fields.clear();
+	fieldsNum.clear();
 
 	}
 
@@ -156,7 +163,7 @@ vector<Row*> CSV_reader::parse(string file_path, bool test, bool originalSet){
 		vector<Row*> output;
 
 		if (!csv_file.is_open())
-			return output;
+			return output;	
 		
 		string line;
 		getline(csv_file, line);
@@ -174,6 +181,12 @@ vector<Row*> CSV_reader::parse(string file_path, bool test, bool originalSet){
 
 
 		}
+
+		Standard_Scaler* scaler = new Standard_Scaler();
+		scaler->fit(output);
+		output = scaler->transform(output);
+
+		delete scaler;
 
 		csv_file.close();
 
