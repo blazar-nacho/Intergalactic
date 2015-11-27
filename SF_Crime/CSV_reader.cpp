@@ -186,7 +186,9 @@ void Row::set(size_t pos, double newval){
 	fieldsNum[pos] = newval;
 }
 
-
+void Row::remove(size_t pos){
+	fieldsNum.erase(fieldsNum.begin() + pos);
+}
 
 Row::~Row(){
 
@@ -253,7 +255,10 @@ void CSV_reader::write(vector<Row*> input, string out){
 
 }
 
-
+void CSV_reader::remove_column(vector<Row*> data, size_t pos){
+	for (size_t i=0; i< data.size(); i++)
+		data[i]->remove(pos);
+}
 
 
 

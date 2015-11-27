@@ -49,6 +49,7 @@ Row(string line, bool test, bool originalSet);
 vector<double> getFieldsNum();
 double get(size_t pos);
 void set(size_t pos, double newval);
+void remove(size_t pos);
 size_t get_size();
 
 timedates_t getDates();
@@ -83,6 +84,8 @@ CSV_reader();
 vector<Row*> parse(string file_path, bool test=false, bool originalSet=true);
 
 void write(vector<Row*> input, string out);
+
+void remove_column(vector<Row*> input, size_t pos);
 
 };
 

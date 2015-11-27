@@ -20,37 +20,19 @@ using namespace shark;
 
 typedef UnlabeledData<RealVector> data_shark;
 
+void delete_data(vector<Row*>* datac) {
+
+	for (size_t i = 0; i < datac->size(); i++) 
+		delete datac->at(i);	
+	datac->clear();
+}
+
+
 int main(void) {
 
 
+	// carga modificacion estandarizacion de train
 	CSV_reader *reader = new CSV_reader();
-	
-	bool test = true;
-	vector<Row*> datac = reader->parse("test.csv", test);
-
-	cout << datac.size() << endl;
-
-	//reader->write(datac, "test_scal.csv");
-
-	delete reader;
-
-
-	for (size_t i = 0; i < datac[15]->getFieldsNum().size(); i++) 
-		cout << datac[15]->get(i) << " + ";
-	cout << endl;
-
-	//data_shark* train = new data_shark(data[15]->getFieldsNum());
-	
-/*
-	for (size_t i = 0; i < data.size(); i++) 
-		delete data[i];
-	
-	data.clear();
-
-
-
-
-/*	CSV_reader *reader = new CSV_reader();
 	
 	vector<Row*> datac = reader->parse("train.csv");
 
@@ -59,27 +41,30 @@ int main(void) {
 	reader->write(datac, "train_scal.csv");
 
 	delete reader;
-*/
-
-	/*for (size_t i = 0; i < data[15]->getFieldsNum().size(); i++) 
-		printf("%f + ", data[15]->getFieldsNum().at(i));
-		//cout << data[15]->getFieldsNum().at(i) << " + ";
-	printf("\n");*/
-
-	//data_shark* train = new data_shark(data[15]->getFieldsNum());
 	
-/*
-	for (size_t i = 0; i < data.size(); i++) 
-		delete data[i];
+	delete_data(&datac);
+
+	// carga modificacion estandarizacion de test
+	reader = new CSV_reader();
 	
-	data.clear();
-*/
-/*
-	ClassificationDataset data;
+	bool test = true;
+	datac = reader->parse("test.csv", test);
+
+	cout << datac.size() << endl;
+
+	reader->write(datac, "test_scal.csv");
+
+	delete reader;
+	
+	delete_data(&datac);
+
+
+	ClassificationDataset data, dataTest;
 	importCSV(data, "train_scal.csv", FIRST_COLUMN, ',');
+	importCSV(dataTest, "test_scal.csv", FIRST_COLUMN, ',');
 	   
 	//Split the dataset into a training and a test dataset
-	ClassificationDataset dataTest = splitAtElement(data,311);
+	//ClassificationDataset dataTest = splitAtElement(data,(int)datac.size()/2);
 
 	cout << "Training set - number of data points: " << data.numberOfElements()
 		<< " number of classes: " << numberOfClasses(data)
@@ -103,6 +88,7 @@ int main(void) {
 	cout << "Random Forest on test set accuracy:     " << 1. - loss.eval(dataTest.labels(), prediction) << endl;
 
 	exportCSV(prediction, "predicted.csv");
-*/
+	
+
 	return EXIT_SUCCESS;
 }
