@@ -14,13 +14,17 @@ using namespace std;
 
 Row::Row(string line, bool test, bool originalSet){
 
-		if (originalSet && !test){
+		if (originalSet){
 			// donde empieza el campo
-			size_t found = 0;			
+			size_t found = 0;
+
+			size_t cant_cols = TRAIN_COLS;
+			if (test) 
+				cant_cols = TEST_COLS;
 
 			// for en vez de while porque necesito todas las columnas
 			// sino devolver vacio
-			for (int i= 0; i < TRAIN_COLS; i++) {
+			for (size_t i= 0; i < cant_cols; i++) {
 				// extrae el campo 
 				string field = extractField(line, &found);		
 				
@@ -31,15 +35,16 @@ Row::Row(string line, bool test, bool originalSet){
 				}
 
 				// opera el campo dependiendo del tipo		
-				double fieldNum = operateField(field, i);				
+				double fieldNum = operateField(field, i, test);				
 
-				if ((fieldNum != DROP) && (i > 0)) {					
+				// mejorar logica del i, ya
+				if ((fieldNum != DROP) && ((i!=0 && !test) || (i != 1 && test))) {					
 					fieldsNum.push_back(fieldNum);
 				}
 
 				// si i=0 es Dates, corregir
 				// double para std scaling
-				if (i==0) {
+				if ((i==0 && !test) || (i == 1 && test)) {
 					fieldsNum.push_back((double)dates.t_year);
 					fieldsNum.push_back((double)dates.t_month);
 					fieldsNum.push_back((double)dates.t_day);
@@ -48,7 +53,7 @@ Row::Row(string line, bool test, bool originalSet){
 				}
 				// si i=1 es Category, corregir
 				// lo pone al principio, para shark first_column
-				if (i==1)
+				if (i==1 && !test)
 					fieldsNum.insert(fieldsNum.begin(), fieldNum);
 					
 
@@ -87,8 +92,8 @@ timedates_t Row::getDates(){
 	return dates;
 }
 
-double Row::operateField(string field, size_t fieldId)
-{
+double Row::operateTrainField(string field, size_t fieldId) {
+
 	if (train_labels.at(fieldId).compare("Dates") == 0) {
 		parseDates(field);
 		return 0.0f;
@@ -96,7 +101,7 @@ double Row::operateField(string field, size_t fieldId)
 
 	if ((train_labels.at(fieldId).compare("X") == 0)
 	|| (train_labels.at(fieldId).compare("Y") == 0)){		
-		return stof(field);
+		return stod(field);
 	}
 
 	if (train_labels.at(fieldId).compare("Category") == 0)
@@ -114,7 +119,42 @@ double Row::operateField(string field, size_t fieldId)
 
 	return DROP;
 
+}
 
+double Row::operateTestField(string field, size_t fieldId) {
+	if (test_labels.at(fieldId).compare("Dates") == 0) {
+		parseDates(field);		
+		return 0.0f;
+	}
+
+	if ((test_labels.at(fieldId).compare("X") == 0)
+	|| (test_labels.at(fieldId).compare("Y") == 0)){			
+		return stod(field);
+	}
+
+	if (test_labels.at(fieldId).compare("Id") == 0)		
+		return stod(field);
+
+	if (test_labels.at(fieldId).compare("PdDistrict") == 0)
+		return pd_district.at(field);
+
+	if (test_labels.at(fieldId).compare("DayOfWeek") == 0)
+		return days.at(field);
+
+	/*if ((test_labels.at(fieldId).compare("Descript") == 0) 
+	|| (test_labels.at(fieldId).compare("Resolution") == 0))
+		return DROP;*/
+
+	return DROP;
+
+}
+
+double Row::operateField(string field, size_t fieldId, bool test)
+{
+	if (test)
+		return 	operateTestField(field, fieldId);
+	return operateTrainField(field, fieldId);	
+	
 }
 
 void Row::parseDates(string field){	
@@ -183,7 +223,7 @@ vector<Row*> CSV_reader::parse(string file_path, bool test, bool originalSet){
 
 
 		}
-
+		
 		Standard_Scaler* scaler = new Standard_Scaler();
 		scaler->fit(output);
 		output = scaler->transform(output);

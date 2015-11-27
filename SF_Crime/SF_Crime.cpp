@@ -22,7 +22,35 @@ typedef UnlabeledData<RealVector> data_shark;
 
 int main(void) {
 
+
 	CSV_reader *reader = new CSV_reader();
+	
+	bool test = true;
+	vector<Row*> datac = reader->parse("test.csv", test);
+
+	cout << datac.size() << endl;
+
+	//reader->write(datac, "test_scal.csv");
+
+	delete reader;
+
+
+	for (size_t i = 0; i < datac[15]->getFieldsNum().size(); i++) 
+		cout << datac[15]->get(i) << " + ";
+	cout << endl;
+
+	//data_shark* train = new data_shark(data[15]->getFieldsNum());
+	
+/*
+	for (size_t i = 0; i < data.size(); i++) 
+		delete data[i];
+	
+	data.clear();
+
+
+
+
+/*	CSV_reader *reader = new CSV_reader();
 	
 	vector<Row*> datac = reader->parse("train.csv");
 
@@ -31,7 +59,7 @@ int main(void) {
 	reader->write(datac, "train_scal.csv");
 
 	delete reader;
-
+*/
 
 	/*for (size_t i = 0; i < data[15]->getFieldsNum().size(); i++) 
 		printf("%f + ", data[15]->getFieldsNum().at(i));
@@ -46,7 +74,7 @@ int main(void) {
 	
 	data.clear();
 */
-
+/*
 	ClassificationDataset data;
 	importCSV(data, "train_scal.csv", FIRST_COLUMN, ',');
 	   
@@ -75,6 +103,6 @@ int main(void) {
 	cout << "Random Forest on test set accuracy:     " << 1. - loss.eval(dataTest.labels(), prediction) << endl;
 
 	exportCSV(prediction, "predicted.csv");
-
+*/
 	return EXIT_SUCCESS;
 }

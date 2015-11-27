@@ -21,6 +21,9 @@
 #define TRAIN_COLS 9
 #define TRAIN_VEC {"Dates","Category","Descript","DayOfWeek","PdDistrict","Resolution","Address","X","Y"}
 
+#define TEST_COLS 7
+#define TEST_VEC {"Id","Dates","DayOfWeek","PdDistrict","Address","X","Y"}
+
 #define CAT_VEC {{"ARSON",1},{"ASSAULT",2},{"BAD CHECKS",3},{"BRIBERY",4},{"BURGLARY",5},{"DISORDERLY CONDUCT",6},{"DRIVING UNDER THE INFLUENCE",7},{"DRUG/NARCOTIC",8},{"DRUNKENNESS",9},{"EMBEZZLEMENT",10},{"EXTORTION",11},{"FAMILY OFFENSES",12},{"FORGERY/COUNTERFEITING",13},{"FRAUD",14},{"GAMBLING",15},{"KIDNAPPING",16},{"LARCENY/THEFT",17},{"LIQUOR LAWS",18},{"LOITERING",19},{"MISSING PERSON",20},{"NON-CRIMINAL",21},{"OTHER OFFENSES",22},{"PORNOGRAPHY/OBSCENE MAT",23},{"PROSTITUTION",24},{"RECOVERED VEHICLE",25},{"ROBBERY",26},{"RUNAWAY",27},{"SECONDARY CODES",28},{"SEX OFFENSES FORCIBLE",29},{"SEX OFFENSES NON FORCIBLE",30},{"STOLEN PROPERTY",31},{"SUICIDE",32},{"SUSPICIOUS OCC",33},{"TREA",34},{"TRESPASS",35},{"VANDALISM",36},{"VEHICLE THEFT",37},{"WARRANTS",38},{"WEAPON LAWS",39}}
 
 #define DAY_VEC {{"Monday",1},{"Tuesday",2},{"Wednesday",3},{"Thursday",4},{"Friday",5},{"Saturday",6},{"Sunday",7}}
@@ -32,6 +35,7 @@ using namespace std;
 typedef map<string, double>  lbl_num;
 
 const vector<string> train_labels = TRAIN_VEC;
+const vector<string> test_labels = TEST_VEC;
 const lbl_num categories = CAT_VEC;
 const lbl_num days = DAY_VEC;
 const lbl_num pd_district = PD_VEC;
@@ -41,22 +45,29 @@ class Row{
 public:
 
 Row(string line, bool test, bool originalSet);
-string extractField(string line, size_t* pos);
+
 vector<double> getFieldsNum();
 double get(size_t pos);
 void set(size_t pos, double newval);
 size_t get_size();
 
 timedates_t getDates();
-double operateField(string field, size_t fieldId);
-void parseDates(string field);
-
 
 ~Row();
 
 private:
 vector<double> fieldsNum;
 timedates_t dates;
+
+string extractField(string line, size_t* pos);
+
+double operateTestField(string field, size_t fieldId);
+double operateTrainField(string field, size_t fieldId);
+
+double operateField(string field, size_t fieldId, bool test);
+void parseDates(string field);
+
+
 
 };
 
