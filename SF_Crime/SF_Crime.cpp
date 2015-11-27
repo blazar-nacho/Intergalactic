@@ -24,11 +24,11 @@ int main(void) {
 
 	CSV_reader *reader = new CSV_reader();
 	
-	vector<Row*> data = reader->parse("train.csv");
+	vector<Row*> datac = reader->parse("train.csv");
 
-	cout << data.size() << endl;
+	cout << datac.size() << endl;
 
-	reader->write(data, "salida.csv");
+	reader->write(datac, "train_scal.csv");
 
 	delete reader;
 
@@ -40,15 +40,15 @@ int main(void) {
 
 	//data_shark* train = new data_shark(data[15]->getFieldsNum());
 	
-
+/*
 	for (size_t i = 0; i < data.size(); i++) 
 		delete data[i];
 	
 	data.clear();
+*/
 
-/*
 	ClassificationDataset data;
-	importCSV(data, "data/C.csv", LAST_COLUMN, ' ');
+	importCSV(data, "train_scal.csv", FIRST_COLUMN, ',');
 	   
 	//Split the dataset into a training and a test dataset
 	ClassificationDataset dataTest = splitAtElement(data,311);
@@ -73,7 +73,8 @@ int main(void) {
 	
 	prediction = model(dataTest.inputs());
 	cout << "Random Forest on test set accuracy:     " << 1. - loss.eval(dataTest.labels(), prediction) << endl;
-*/
+
+	exportCSV(prediction, "predicted.csv");
 
 	return EXIT_SUCCESS;
 }

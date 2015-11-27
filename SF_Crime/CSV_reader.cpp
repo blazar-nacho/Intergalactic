@@ -46,6 +46,10 @@ Row::Row(string line, bool test, bool originalSet){
 					fieldsNum.push_back((double)dates.t_hour);
 					fieldsNum.push_back((double)dates.t_min);
 				}
+				// si i=1 es Category, corregir
+				// lo pone al principio, para shark first_column
+				if (i==1)
+					fieldsNum.insert(fieldsNum.begin(), fieldNum);
 					
 
 			}
@@ -197,9 +201,11 @@ void CSV_reader::write(vector<Row*> input, string out){
 	remove(out.c_str());
 	ofstream output(out.c_str(), ios::app);
 
-	output<< fixed << setprecision(8) ;
+	
 	for (size_t i=0; i<input.size(); i++) {
-		for (size_t j = 0; j<input[i]->get_size()-1; j++)
+		output<< fixed << setprecision(0) << input[i]->get(0) << "," ;
+		output<< fixed << setprecision(8) ;
+		for (size_t j = 1; j<input[i]->get_size()-1; j++)
 			output << input[i]->get(j) << "," ;
 		output << input[i]->get(input[i]->get_size()-1) << endl;
 	}
