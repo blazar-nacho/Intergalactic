@@ -38,9 +38,9 @@ Row::Row(string line, bool test, bool originalSet){
 				double fieldNum = operateField(field, i, test);				
 
 				// mejorar logica del i, ya
-				if ((fieldNum != DROP) && ((i!=0 && !test) || (i != 1 && test))) {					
+				if ((fieldNum != DROP) && ((i>1 && !test) || (i != 1 && test))) {					
 					fieldsNum.push_back(fieldNum);
-				}
+				} 
 
 				// si i=0 es Dates, corregir
 				// double para std scaling
@@ -48,13 +48,14 @@ Row::Row(string line, bool test, bool originalSet){
 					fieldsNum.push_back((double)dates.t_year);
 					fieldsNum.push_back((double)dates.t_month);
 					fieldsNum.push_back((double)dates.t_day);
-					fieldsNum.push_back((double)dates.t_hour);
-					fieldsNum.push_back((double)dates.t_min);
+					fieldsNum.push_back((double)(dates.t_hour - (dates.t_min/60.0)));
+					//fieldsNum.push_back((double)dates.t_min);
 				}
 				// si i=1 es Category, corregir
 				// lo pone al principio, para shark first_column
 				if (i==1 && !test)
 					fieldsNum.insert(fieldsNum.begin(), fieldNum);
+				
 					
 
 			}
@@ -246,7 +247,7 @@ void CSV_reader::write(vector<Row*> input, string out){
 	
 	for (size_t i=0; i<input.size(); i++) {
 		output<< fixed << setprecision(0) << input[i]->get(0) << "," ;
-		output<< fixed << setprecision(8) ;
+		output<< fixed << setprecision(14) ;
 		for (size_t j = 1; j<input[i]->get_size()-1; j++)
 			output << input[i]->get(j) << "," ;
 		output << input[i]->get(input[i]->get_size()-1) << endl;

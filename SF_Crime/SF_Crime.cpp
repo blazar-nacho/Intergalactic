@@ -30,6 +30,32 @@ void delete_data(vector<Row*>* datac) {
 
 int main(void) {
 
+/*
+	CSV_reader *reader = new CSV_reader();
+	
+	bool test = true;
+	vector<Row*> datac = reader->parse("test.csv", test);
+
+	cout << datac.size() << endl;
+
+	//reader->write(datac, "test_scal.csv");
+
+	delete reader;
+
+
+	for (size_t i = 0; i < datac[15]->getFieldsNum().size(); i++) 
+		cout << datac[15]->get(i) << " + ";
+	cout << endl;
+*/
+	//data_shark* train = new data_shark(data[15]->getFieldsNum());
+	
+/*
+	for (size_t i = 0; i < data.size(); i++) 
+		delete data[i];
+	
+	data.clear();
+*/
+
 
 	// carga modificacion estandarizacion de train
 	CSV_reader *reader = new CSV_reader();
@@ -58,7 +84,7 @@ int main(void) {
 	
 	delete_data(&datac);
 
-
+/*
 	ClassificationDataset data, dataTest;
 	importCSV(data, "train_scal.csv", FIRST_COLUMN, ',');
 	importCSV(dataTest, "test_scal.csv", FIRST_COLUMN, ',');
@@ -89,6 +115,6 @@ int main(void) {
 
 	exportCSV(prediction, "predicted.csv");
 	
-
+*/
 	return EXIT_SUCCESS;
 }
