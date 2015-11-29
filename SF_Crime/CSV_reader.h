@@ -85,7 +85,11 @@ vector<Row*> parse(string file_path, bool test=false, bool originalSet=true);
 
 void write(vector<Row*> input, string out);
 
+void write(vector<double> input, string out);
+
 void remove_column(vector<Row*> input, size_t pos);
+
+
 
 };
 

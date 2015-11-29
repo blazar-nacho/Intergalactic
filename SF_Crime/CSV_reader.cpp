@@ -256,6 +256,19 @@ void CSV_reader::write(vector<Row*> input, string out){
 
 }
 
+void CSV_reader::write(vector<double> input, string out){
+
+	remove(out.c_str());
+	ofstream output(out.c_str(), ios::app);
+
+	output<< fixed << setprecision(14) ;
+	for (size_t i=0; i < input.size(); i++)
+		output << input.at(i) << endl;
+	
+
+
+}
+
 void CSV_reader::remove_column(vector<Row*> data, size_t pos){
 	for (size_t i=0; i< data.size(); i++)
 		data[i]->remove(pos);
