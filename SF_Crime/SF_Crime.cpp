@@ -11,8 +11,10 @@
 #include "CSV_reader.h"
 #include <mlpack/core.hpp>
 #include <iostream>
-#include "pca.h"
+//#include "pca.h"
+
 using namespace std;
+using namespace mlpack;
 
 void delete_data(vector<Row*>* datac) {
 
@@ -21,6 +23,7 @@ void delete_data(vector<Row*>* datac) {
 	datac->clear();
 }
 
+/*
 vector<double> one_dimension(vector<Row*> data, int dimensions=1)
 {
 	vector<double> reduced;	
@@ -46,11 +49,28 @@ vector<double> one_dimension(vector<Row*> data, int dimensions=1)
 
 
 }
+*/
 
 
 int main(void) {
+	cout << "You shall not pass!" << endl;
 
 
+	arma::mat data;
+	// Use data::Load() which transposes the matrix.
+	data::Load("C.csv", data, true);
+	
+
+	// Now compute the covariance.  We assume that the data is already centered.
+	// Remember, because the matrix is column-major, the covariance operation is
+	// transposed.
+	arma::mat cov = data * trans(data) / data.n_cols;
+
+	// Save the output.
+	data::Save("cov.csv", cov, true);
+
+
+/*
 	// carga modificacion estandarizacion de train
 	CSV_reader *reader = new CSV_reader();
 	
@@ -86,7 +106,7 @@ int main(void) {
 	delete_data(&datac);
 
 
-
+*/
 
 	return EXIT_SUCCESS;
 }

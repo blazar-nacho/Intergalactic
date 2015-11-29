@@ -30,7 +30,7 @@ CFLAGS += -ggdb -DDEBUG -fno-inline
 CSTD = c99
 
 # Estandar de C++ a usar
-CXXSTD = c++11
+CXXSTD = c++03
 
 # Archivo log de Valgrind.
 VGLOGFILE = valgrind.out
@@ -71,7 +71,7 @@ CC =  @echo "  CC  $@"; $(occ)
 CXX = @echo "  CXX $@"; $(ocxx)
 RM =  @echo "  CLEAN"; $(orm)
 LD =  @echo "  LD  $@"; $(old)
-LDLIBS = -fopenmp -lmlpack -lpca -Llib -lboost_serialization -lblas -llapack 
+LDLIBS = -fopenmp -lmlpack -lpca -Llib -larmadillo -lhdf5 -lblas
 endif
 
 

@@ -12,7 +12,8 @@
 using namespace std;
 
 
-Row::Row(string line, bool test, bool originalSet){
+Row::Row(string line, bool test, bool originalSet, const vector<string>* tr_l, const vector<string>* te_l, 
+	const lbl_num* ca_m, const lbl_num* da_m, const lbl_num* pd_m){
 
 		if (originalSet){
 			// donde empieza el campo
@@ -35,7 +36,8 @@ Row::Row(string line, bool test, bool originalSet){
 				}
 
 				// opera el campo dependiendo del tipo		
-				double fieldNum = operateField(field, i, test);				
+				double fieldNum = operateField(field, i, test,  tr_l,  te_l, 
+				 ca_m,  da_m,  pd_m);				
 
 				// mejorar logica del i, ya
 				if ((fieldNum != DROP) && ((i>1 && !test) || (i != 1 && test))) {					
@@ -93,68 +95,70 @@ timedates_t Row::getDates(){
 	return dates;
 }
 
-double Row::operateTrainField(string field, size_t fieldId) {
+double Row::operateTrainField(string field, size_t fieldId, const vector<string>* tr_l, const vector<string>* te_l, const lbl_num* ca_m, const lbl_num* da_m, const lbl_num* pd_m) {
 
-	if (train_labels.at(fieldId).compare("Dates") == 0) {
+	if (tr_l->at(fieldId).compare("Dates") == 0) {
 		parseDates(field);
 		return 0.0f;
 	}
 
-	if ((train_labels.at(fieldId).compare("X") == 0)
-	|| (train_labels.at(fieldId).compare("Y") == 0)){		
-		return stod(field);
+	if ((tr_l->at(fieldId).compare("X") == 0)
+	|| (tr_l->at(fieldId).compare("Y") == 0)){		
+		return (double)atof(field.c_str());
 	}
 
-	if (train_labels.at(fieldId).compare("Category") == 0)
-		return categories.at(field);
+	if (tr_l->at(fieldId).compare("Category") == 0)
+		return ca_m->at(field);
 
-	if (train_labels.at(fieldId).compare("PdDistrict") == 0)
-		return pd_district.at(field);
+	if (tr_l->at(fieldId).compare("PdDistrict") == 0)
+		return pd_m->at(field);
 
-	if (train_labels.at(fieldId).compare("DayOfWeek") == 0)
-		return days.at(field);
+	if (tr_l->at(fieldId).compare("DayOfWeek") == 0)
+		return da_m->at(field);
 
-	/*if ((train_labels.at(fieldId).compare("Descript") == 0) 
-	|| (train_labels.at(fieldId).compare("Resolution") == 0))
+	/*if ((tr_l->at(fieldId).compare("Descript") == 0) 
+	|| (tr_l->at(fieldId).compare("Resolution") == 0))
 		return DROP;*/
 
 	return DROP;
 
 }
 
-double Row::operateTestField(string field, size_t fieldId) {
-	if (test_labels.at(fieldId).compare("Dates") == 0) {
+double Row::operateTestField(string field, size_t fieldId , const vector<string>* tr_l, const vector<string>* te_l, const lbl_num* ca_m, const lbl_num* da_m, const lbl_num* pd_m) {
+	if (te_l->at(fieldId).compare("Dates") == 0) {
 		parseDates(field);		
 		return 0.0f;
 	}
 
-	if ((test_labels.at(fieldId).compare("X") == 0)
-	|| (test_labels.at(fieldId).compare("Y") == 0)){			
-		return stod(field);
+	if ((te_l->at(fieldId).compare("X") == 0)
+	|| (te_l->at(fieldId).compare("Y") == 0)){			
+		return (double)atof(field.c_str());
 	}
 
-	if (test_labels.at(fieldId).compare("Id") == 0)		
-		return stod(field);
+	if (te_l->at(fieldId).compare("Id") == 0)		
+		return (double)atof(field.c_str());
 
-	if (test_labels.at(fieldId).compare("PdDistrict") == 0)
-		return pd_district.at(field);
+	if (te_l->at(fieldId).compare("PdDistrict") == 0)
+		return pd_m->at(field);
 
-	if (test_labels.at(fieldId).compare("DayOfWeek") == 0)
-		return days.at(field);
+	if (te_l->at(fieldId).compare("DayOfWeek") == 0)
+		return da_m->at(field);
 
-	/*if ((test_labels.at(fieldId).compare("Descript") == 0) 
-	|| (test_labels.at(fieldId).compare("Resolution") == 0))
+	/*if ((te_l->at(fieldId).compare("Descript") == 0) 
+	|| (te_l->at(fieldId).compare("Resolution") == 0))
 		return DROP;*/
 
 	return DROP;
 
 }
 
-double Row::operateField(string field, size_t fieldId, bool test)
+double Row::operateField(string field, size_t fieldId, bool test, const vector<string>* tr_l, const vector<string>* te_l, const lbl_num* ca_m, const lbl_num* da_m, const lbl_num* pd_m)
 {
 	if (test)
-		return 	operateTestField(field, fieldId);
-	return operateTrainField(field, fieldId);	
+		return 	operateTestField(field, fieldId, tr_l,  te_l, 
+	 ca_m,  da_m,  pd_m);
+	return operateTrainField(field, fieldId,  tr_l,  te_l, 
+	 ca_m,  da_m,  pd_m);	
 	
 }
 
@@ -162,16 +166,16 @@ void Row::parseDates(string field){
 	if (field.size() < 2) return;
 
 	size_t ff1 = field.find("-", 1);
-	dates.t_year = stoi(field.substr(0, ff1));
+	dates.t_year = atoi(field.substr(0, ff1).c_str());
 	size_t ff2 = field.find("-", ff1 + 1);
-	dates.t_month = stoi(field.substr(ff1+1, ff2 - ff1));
+	dates.t_month = atoi(field.substr(ff1+1, ff2 - ff1).c_str());
 	ff1 = field.find(" ", ff2 + 1);
-	dates.t_day = stoi(field.substr(ff2+1, ff1 - ff2));
+	dates.t_day = atoi(field.substr(ff2+1, ff1 - ff2).c_str());
 
 	ff2 = field.find(":", ff1 +1);
-	dates.t_hour = stoi(field.substr(ff1+1 , ff2 -ff1));
+	dates.t_hour = atoi(field.substr(ff1+1 , ff2 -ff1).c_str());
 	ff1 = field.find(":", ff2 + 1);
-	dates.t_min = stoi(field.substr(ff2+1, ff1 - ff2));
+	dates.t_min = atoi(field.substr(ff2+1, ff1 - ff2).c_str());
 
 }
 
@@ -204,7 +208,9 @@ Row::~Row(){
 CSV_reader::CSV_reader(){}
 
 vector<Row*> CSV_reader::parse(string file_path, bool test, bool originalSet){
-		ifstream csv_file(file_path);
+		maps_init();
+
+		ifstream csv_file(file_path.c_str());
 		vector<Row*> output;
 
 		if (!csv_file.is_open())
@@ -216,7 +222,7 @@ vector<Row*> CSV_reader::parse(string file_path, bool test, bool originalSet){
 		
 			getline(csv_file, line);
 			//if (!test)			
-			Row* oneRow = new Row(line, test, originalSet);
+			Row* oneRow = new Row(line, test, originalSet, tr_l, te_l, ca_m, da_m, pd_m);
 			// si se parseo bien la agrego
 			if (!oneRow->getFieldsNum().empty())
 				output.push_back(oneRow);
@@ -275,5 +281,25 @@ void CSV_reader::remove_column(vector<Row*> data, size_t pos){
 }
 
 
+
+void CSV_reader::maps_init() {
+
+const string train_cons[] = TRAIN_VEC;
+tr_l = new vector<string>(train_cons, train_cons + sizeof(train_cons) / sizeof(train_cons) );
+
+const string test_cons[] = TEST_VEC;
+te_l = new vector<string>(test_cons, test_cons + sizeof(test_cons) / sizeof(test_cons) );
+
+
+const pair<string, double> cat_cons[] = CAT_VEC;
+ca_m = new lbl_num(cat_cons, cat_cons + sizeof(cat_cons) / sizeof(cat_cons[0]));
+
+const pair<string, double> day_cons[] = DAY_VEC;
+da_m = new lbl_num(day_cons, day_cons + sizeof(day_cons) / sizeof(day_cons[0]));
+
+const pair<string, double> pd_cons[] = PD_VEC;
+pd_m = new lbl_num(pd_cons, pd_cons + sizeof(pd_cons) / sizeof(pd_cons[0]));
+
+}
 
 
