@@ -71,7 +71,7 @@ CC =  @echo "  CC  $@"; $(occ)
 CXX = @echo "  CXX $@"; $(ocxx)
 RM =  @echo "  CLEAN"; $(orm)
 LD =  @echo "  LD  $@"; $(old)
-LDLIBS = -fopenmp -lshark -lpca -Llib -lboost_serialization -lblas -llapack 
+LDLIBS = -fopenmp -lmlpack -lpca -Llib -lboost_serialization -lblas -llapack 
 endif
 
 
